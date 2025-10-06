@@ -139,15 +139,23 @@ class _HomePageState extends State<HomePage> {
 
 
               //Projects
-              Container(height: 500, width: double.maxFinite),
+              Container(
+                height: 500, width: double.maxFinite,
+                child: Text('Projects'),
+                ),
               //Contacts
               Container(
                 height: 500,
                 width: double.maxFinite,
                 color: Colors.blueGrey,
+                child: Text('Contacts'),
               ),
               //Footer
-              Container(height: 500, width: double.maxFinite),
+              Container(
+                height: 500, width: double.maxFinite
+                ,color: Colors.redAccent,
+                child: Text('Footer'),
+              ),
             ],
           ),
         );
