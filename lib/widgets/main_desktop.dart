@@ -19,30 +19,32 @@ class MainDesktop extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text("Hi,\nI'm Jorge Machado\nA Flutter Developer", style: TextStyle(
-                          fontSize: 30,
-                          height: 1.5,
-                          fontWeight: FontWeight.bold,
-                          color: CustomColor.whitePrimary,
-                          ),),
-                          Gap(15),
-                        SizedBox(
-                          width: 250,
-                          child: ElevatedButton(
-                            onPressed: (){},
-                             child: Text('Get in touch')
-                             )
-                             ),
-                      ],
+                    Expanded(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text("Hi,\nI'm Jorge Machado\nA Flutter Developer", style: TextStyle(
+                            fontSize: 30,
+                            height: 1.5,
+                            fontWeight: FontWeight.bold,
+                            color: CustomColor.whitePrimary,
+                            ),),
+                            Gap(15),
+                          SizedBox(
+                            width: 250,
+                            child: ElevatedButton(
+                              onPressed: (){},
+                               child: Text('Get in touch')
+                               )
+                               ),
+                        ],
+                      ),
                     ),
-                    SizedBox(
-                      height: 450,
+                    Expanded(
                       child: Image.asset(
                         'assets/avatar_portfolio_1.png',
-                        width: screenWidth/2,
+                        // width: screenWidth/2,
+                        fit: BoxFit.contain,
                         ),
                     )
                   ],
