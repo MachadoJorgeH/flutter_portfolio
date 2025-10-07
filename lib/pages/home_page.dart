@@ -102,7 +102,7 @@ class _HomePageState extends State<HomePage> {
                                       platformItems[i]['img'],
                                       width: 26,
                                     ),
-                                    title: Text(platformItems[i]['title']),
+                                    title: Text(platformItems[i]['title'], style: TextStyle(color: CustomColor.whitePrimary, fontWeight: FontWeight.bold),),
                                   ),
                                 ),
                             ],
@@ -145,7 +145,7 @@ class _HomePageState extends State<HomePage> {
                                         vertical: 12,
                                         horizontal: 16,
                                       ),
-                                      label: Text(skillItems[i]['title']),
+                                      label: Text(skillItems[i]['title'], style: TextStyle(color: CustomColor.whitePrimary, fontWeight: FontWeight.bold),),
                                       avatar: Image.asset(
                                         skillItems[i]['img'],
                                         width: 26,
