@@ -21,6 +21,7 @@ class CustomTextField extends StatelessWidget {
       maxLines: maxLine,
       style: const TextStyle(color: CustomColor.scaffoldBg),
       validator: validator,
+      cursorColor: CustomColor.hintDark,
       decoration: InputDecoration(
         contentPadding: const EdgeInsets.all(16),
         filled: true,

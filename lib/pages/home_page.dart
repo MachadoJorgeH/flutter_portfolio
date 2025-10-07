@@ -175,6 +175,10 @@ class _HomePageState extends State<HomePage> {
                   alignment: Alignment.center,
                   child: const Text(
                     'Made by Jorge Machado with Flutter 3.32.8 version',
+                    style: TextStyle(
+                      color: CustomColor.whiteSecondary,
+                      fontSize: 14,
+                    ),
                   ),
                 ),
               ],

@@ -13,15 +13,24 @@ class ContactSection extends StatefulWidget {
 
 class _ContactSectionState extends State<ContactSection> {
   final _formKey = GlobalKey<FormState>();
+  final _nameController = TextEditingController();
+  final _emailController = TextEditingController();
+  final _messageController = TextEditingController();
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _emailController.dispose();
+    _messageController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.fromLTRB(25, 20, 25, 60),
       width: double.maxFinite,
-      decoration: BoxDecoration(
-        color: CustomColor.bgLight1,
-      ),
+      decoration: BoxDecoration(color: CustomColor.bgLight1),
       child: Column(
         children: [
           // title
@@ -49,6 +58,7 @@ class _ContactSectionState extends State<ContactSection> {
                       // name
                       Flexible(
                         child: CustomTextField(
+                          controller: _nameController,
                           hintText: 'Your name:',
                           validator: (value) {
                             if (value == null || value.trim().isEmpty) {
@@ -63,6 +73,7 @@ class _ContactSectionState extends State<ContactSection> {
                       Flexible(
                         child: CustomTextField(
                           hintText: 'Your email:',
+                          controller: _emailController,
                           validator: (value) {
                             if (value == null || value.trim().isEmpty) {
                               return 'Please enter your email.';
@@ -84,6 +95,7 @@ class _ContactSectionState extends State<ContactSection> {
                 ConstrainedBox(
                   constraints: const BoxConstraints(maxWidth: 700),
                   child: CustomTextField(
+                    controller: _messageController,
                     hintText: 'Your message:',
                     maxLine: 15,
                     validator: (value) {
@@ -103,7 +115,19 @@ class _ContactSectionState extends State<ContactSection> {
                     child: ElevatedButton(
                       onPressed: () {
                         if (_formKey.currentState?.validate() ?? false) {
-                          // TODO: Adicionar a lógica para enviar o email/mensagem
+                          final String name = _nameController.text;
+                          final String email = _emailController.text;
+                          final String message = _messageController.text;
+                          final String subject = 'Contato do Portfólio: $name';
+                          final String body = '$message\n\nDe: $email';
+
+                          final Uri emailUri = Uri(
+                            scheme: 'mailto',
+                            path: 'jorgehenriqueq@gmail.com',
+                            queryParameters: {'subject': subject, 'body': body},
+                          );
+
+                          launchUrl(emailUri);
                         }
                       },
                       child: const Text('Get in touch'),
