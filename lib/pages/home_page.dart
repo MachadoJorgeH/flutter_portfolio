@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:my_portifolio/constants/colors.dart';
 import 'package:my_portifolio/constants/size.dart';
 import 'package:my_portifolio/widgets/animated_skills_section.dart';
+import 'package:my_portifolio/widgets/contact_section.dart';
 import 'package:my_portifolio/widgets/drawer_mobile.dart';
 import 'package:my_portifolio/widgets/header_desktop.dart';
 import 'package:my_portifolio/widgets/header_mobile.dart';
 import 'package:my_portifolio/widgets/main_desktop.dart';
 import 'package:my_portifolio/widgets/main_mobile.dart';
+import 'package:my_portifolio/widgets/projects_section.dart';
 import 'package:my_portifolio/widgets/skills_desktop.dart';
 import 'package:my_portifolio/widgets/skills_mobile.dart';
 
@@ -19,6 +21,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
+
   final scrollController = ScrollController();
   final skillsSectionKey = GlobalKey();
 
@@ -75,6 +78,8 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    // final screenSize = MediaQuery.of(context).size;
+    // final screenWidth = screenSize.width;
     return LayoutBuilder(
       builder: (context, constraints) {
         final isDesktop = constraints.maxWidth >= kMinDesktopWidth;
@@ -109,32 +114,20 @@ class _HomePageState extends State<HomePage> {
               ),
 
               // Projects
-              Container(
-                height: 500,
-                width: double.maxFinite,
-                alignment: Alignment.center,
-                child: const Text('Projects'),
-              ),
+              ProjectsSection(),
 
               // Contacts
-              Container(
-                height: 500,
-                width: double.maxFinite,
-                decoration: BoxDecoration(
-                  color: CustomColor.bgLight1,
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                alignment: Alignment.center,
-                child: const Text('Contacts'),
-              ),
+              ContactSection(),
 
               // Footer
               Container(
-                height: 500,
+                height: 50,
                 width: double.maxFinite,
                 color: CustomColor.bgLight2,
                 alignment: Alignment.center,
-                child: const Text('Footer'),
+                child: const Text(
+                  'Made by Jorge Machado with Flutter 3.32.8 version',
+                ),
               ),
             ],
           ),
