@@ -64,11 +64,14 @@ class _HomePageState extends State<HomePage> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     //title
-                    Text('What I can do', style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      color: CustomColor.whitePrimary
-                    )),
+                    Text(
+                      'What I can do',
+                      style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                        color: CustomColor.whitePrimary,
+                      ),
+                    ),
                     Gap(20),
 
                     //plataforms and skills
@@ -78,27 +81,30 @@ class _HomePageState extends State<HomePage> {
                       children: [
                         //platforms
                         ConstrainedBox(
-                          constraints: BoxConstraints(
-                            maxWidth: 450,
-                          ),
+                          constraints: BoxConstraints(maxWidth: 450),
                           child: Wrap(
                             spacing: 5,
                             runSpacing: 5,
                             children: [
                               for (int i = 0; i < platformItems.length; i++)
-                              Container(
-                                width: 200,
-                                decoration: BoxDecoration(
-                                  color: CustomColor.bgLight2,
-                                  borderRadius: BorderRadius.circular(10),
-                                  // border: Border.all(color: CustomColor.whitePrimary),
+                                Container(
+                                  width: 200,
+                                  decoration: BoxDecoration(
+                                    color: CustomColor.bgLight2,
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  child: ListTile(
+                                    contentPadding: EdgeInsets.symmetric(
+                                      horizontal: 20,
+                                      vertical: 10,
+                                    ),
+                                    leading: Image.asset(
+                                      platformItems[i]['img'],
+                                      width: 26,
+                                    ),
+                                    title: Text(platformItems[i]['title']),
+                                  ),
                                 ),
-                                child: ListTile(
-                                  contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                                  leading: Image.asset(platformItems[i]['img'], width: 26,),
-                                  title: Text(platformItems[i]['title']),
-                                ),
-                              )
                             ],
                           ),
                         ),
@@ -106,43 +112,63 @@ class _HomePageState extends State<HomePage> {
 
                         //skills
                         Flexible(
-                          child: ConstrainedBox(
-                            constraints: const BoxConstraints(
-                              maxWidth: 500
-                            ),
-                            child: Wrap(
-                              spacing: 10,
-                              runSpacing: 10,
-                              children: [
-                                for (int i = 0; i < skillItems.length; i++)
-                                Container(
-                                  decoration: BoxDecoration(
-                                    // border: Border.all(color: CustomColor.whitePrimary),
-                                    // borderRadius: BorderRadius.circular(5),
-                                  ),
-                                  child: Chip(
-                                    backgroundColor: CustomColor.bgLight2,
-                                    padding: EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-                                    label: Text(skillItems[i]['title']),
-                                    avatar: Image.asset(skillItems[i]['img'], width: 26),),
-                                ),
-                                  
-                              ],
+                          child: Container(
+                            constraints: BoxConstraints(maxWidth: 450),
+                            child: LayoutBuilder(
+                              builder: (context, constraints) {
+                                // Define o número de colunas com base na largura disponível
+                                int crossAxisCount;
+                                if (constraints.maxWidth < 450) {
+                                  crossAxisCount = 2; // Telas muito pequenas
+                                } else if (constraints.maxWidth < 700) {
+                                  crossAxisCount = 3; // Telas pequenas/médias
+                                } else {
+                                  crossAxisCount = 4; // Telas largas
+                                }
+
+                                return GridView.count(
+                                  crossAxisCount: crossAxisCount,
+                                  mainAxisSpacing: 10,
+                                  crossAxisSpacing: 10,
+                                  childAspectRatio:
+                                      3.5, // Ajusta a proporção do chip, pode precisar de ajuste
+                                  // Essencial para usar GridView dentro de um SingleChildScrollView
+                                  shrinkWrap: true,
+                                  physics: const NeverScrollableScrollPhysics(),
+
+                                  children: List.generate(skillItems.length, (
+                                    i,
+                                  ) {
+                                    return Chip(
+                                      backgroundColor: CustomColor.bgLight2,
+                                      padding: const EdgeInsets.symmetric(
+                                        vertical: 12,
+                                        horizontal: 16,
+                                      ),
+                                      label: Text(skillItems[i]['title']),
+                                      avatar: Image.asset(
+                                        skillItems[i]['img'],
+                                        width: 26,
+                                      ),
+                                    );
+                                  }),
+                                );
+                              },
                             ),
                           ),
-                        )
+                        ),
                       ],
-                    )
+                    ),
                   ],
                 ),
               ),
 
-
               //Projects
               Container(
-                height: 500, width: double.maxFinite,
+                height: 500,
+                width: double.maxFinite,
                 child: Text('Projects'),
-                ),
+              ),
               //Contacts
               Container(
                 height: 500,
@@ -152,8 +178,9 @@ class _HomePageState extends State<HomePage> {
               ),
               //Footer
               Container(
-                height: 500, width: double.maxFinite
-                ,color: Colors.redAccent,
+                height: 500,
+                width: double.maxFinite,
+                color: Colors.redAccent,
                 child: Text('Footer'),
               ),
             ],
