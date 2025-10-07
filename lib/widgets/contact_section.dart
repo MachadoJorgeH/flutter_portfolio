@@ -12,7 +12,6 @@ class ContactSection extends StatefulWidget {
 }
 
 class _ContactSectionState extends State<ContactSection> {
-  // Chave para o nosso formulário
   final _formKey = GlobalKey<FormState>();
 
   @override
@@ -22,7 +21,6 @@ class _ContactSectionState extends State<ContactSection> {
       width: double.maxFinite,
       decoration: BoxDecoration(
         color: CustomColor.bgLight1,
-        // borderRadius: BorderRadius.circular(20),
       ),
       child: Column(
         children: [
