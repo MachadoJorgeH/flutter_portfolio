@@ -1,16 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:gap/gap.dart';
 import 'package:my_portifolio/constants/colors.dart';
-import 'package:my_portifolio/constants/nav_items.dart';
 import 'package:my_portifolio/constants/size.dart';
-import 'package:my_portifolio/constants/skill_items.dart';
-import 'package:my_portifolio/styles/style.dart';
+import 'package:my_portifolio/widgets/animated_skills_section.dart';
 import 'package:my_portifolio/widgets/drawer_mobile.dart';
 import 'package:my_portifolio/widgets/header_desktop.dart';
 import 'package:my_portifolio/widgets/header_mobile.dart';
 import 'package:my_portifolio/widgets/main_desktop.dart';
 import 'package:my_portifolio/widgets/main_mobile.dart';
-import 'package:my_portifolio/widgets/site_logo.dart';
+import 'package:my_portifolio/widgets/skills_desktop.dart';
+import 'package:my_portifolio/widgets/skills_mobile.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -21,27 +19,76 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
+  final scrollController = ScrollController();
+  final skillsSectionKey = GlobalKey();
+
+  bool showSkillsAnimation = false;
+
+  @override
+  void initState() {
+    super.initState();
+    scrollController.addListener(_onScroll);
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Future.delayed(const Duration(milliseconds: 100), () {
+        if (mounted) _checkSkillsPosition();
+      });
+    });
+  }
+
+  void _onScroll() {
+    _checkSkillsPosition();
+  }
+
+  void _checkSkillsPosition() {
+    final context = skillsSectionKey.currentContext;
+    if (context == null) return;
+
+    try {
+      final box = context.findRenderObject() as RenderBox?;
+      if (box == null || !box.hasSize) return;
+
+      final position = box.localToGlobal(Offset.zero);
+      final screenHeight = MediaQuery.of(this.context).size.height;
+
+      final bool isInView =
+          position.dy < screenHeight * 0.8 &&
+          position.dy > -box.size.height / 2;
+
+      if (isInView != showSkillsAnimation) {
+        if (mounted) {
+          setState(() {
+            showSkillsAnimation = isInView;
+          });
+        }
+      }
+    } catch (e) {
+      debugPrint('Erro ao checar posição: $e');
+    }
+  }
+
+  @override
+  void dispose() {
+    scrollController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    final screenSize = MediaQuery.of(context).size;
-    final screenWidth = screenSize.width;
-    final screenHeight = screenSize.height;
-
     return LayoutBuilder(
       builder: (context, constraints) {
+        final isDesktop = constraints.maxWidth >= kMinDesktopWidth;
+
         return Scaffold(
           key: scaffoldKey,
           backgroundColor: CustomColor.scaffoldBg,
-          endDrawer:
-              constraints.maxWidth >= kMinDesktopWidth
-                  ? null
-                  : const DrawerMobile(),
+          endDrawer: isDesktop ? null : const DrawerMobile(),
           body: ListView(
-            scrollDirection: Axis.vertical,
+            controller: scrollController,
+            physics: const BouncingScrollPhysics(),
             children: [
-              //Main
-              if (constraints.maxWidth >= kMinDesktopWidth)
+              // Header
+              if (isDesktop)
                 HeaderDesktop()
               else
                 HeaderMobile(
@@ -50,138 +97,44 @@ class _HomePageState extends State<HomePage> {
                     scaffoldKey.currentState?.openEndDrawer();
                   },
                 ),
-              if (constraints.maxWidth >= kMinDesktopWidth)
-                MainDesktop()
-              else
-                MainMobile(),
 
-              //SKILLS
+              // Main
+              if (isDesktop) MainDesktop() else MainMobile(),
+
+              // Skills
+              AnimatedSkillsSection(
+                key: skillsSectionKey,
+                isVisible: showSkillsAnimation,
+                child: isDesktop ? const SkillsDesktop() : const SkillsMobile(),
+              ),
+
+              // Projects
               Container(
-                width: screenWidth,
-                padding: EdgeInsets.fromLTRB(25, 20, 25, 60),
-                color: CustomColor.bgLight1,
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    //title
-                    Text(
-                      'What I can do',
-                      style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                        color: CustomColor.whitePrimary,
-                      ),
-                    ),
-                    Gap(20),
+                height: 500,
+                width: double.maxFinite,
+                alignment: Alignment.center,
+                child: const Text('Projects'),
+              ),
 
-                    //plataforms and skills
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        //platforms
-                        ConstrainedBox(
-                          constraints: BoxConstraints(maxWidth: 450),
-                          child: Wrap(
-                            spacing: 5,
-                            runSpacing: 5,
-                            children: [
-                              for (int i = 0; i < platformItems.length; i++)
-                                Container(
-                                  width: 200,
-                                  decoration: BoxDecoration(
-                                    color: CustomColor.bgLight2,
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                                  child: ListTile(
-                                    contentPadding: EdgeInsets.symmetric(
-                                      horizontal: 20,
-                                      vertical: 10,
-                                    ),
-                                    leading: Image.asset(
-                                      platformItems[i]['img'],
-                                      width: 26,
-                                    ),
-                                    title: Text(platformItems[i]['title'], style: TextStyle(color: CustomColor.whitePrimary, fontWeight: FontWeight.bold),),
-                                  ),
-                                ),
-                            ],
-                          ),
-                        ),
-                        Gap(50),
-
-                        //skills
-                        Flexible(
-                          child: Container(
-                            constraints: BoxConstraints(maxWidth: 450),
-                            child: LayoutBuilder(
-                              builder: (context, constraints) {
-                                // Define o número de colunas com base na largura disponível
-                                int crossAxisCount;
-                                if (constraints.maxWidth < 450) {
-                                  crossAxisCount = 2; // Telas muito pequenas
-                                } else if (constraints.maxWidth < 700) {
-                                  crossAxisCount = 3; // Telas pequenas/médias
-                                } else {
-                                  crossAxisCount = 4; // Telas largas
-                                }
-
-                                return GridView.count(
-                                  crossAxisCount: crossAxisCount,
-                                  mainAxisSpacing: 10,
-                                  crossAxisSpacing: 10,
-                                  childAspectRatio:
-                                      3.5, // Ajusta a proporção do chip, pode precisar de ajuste
-                                  // Essencial para usar GridView dentro de um SingleChildScrollView
-                                  shrinkWrap: true,
-                                  physics: const NeverScrollableScrollPhysics(),
-
-                                  children: List.generate(skillItems.length, (
-                                    i,
-                                  ) {
-                                    return Chip(
-                                      backgroundColor: CustomColor.bgLight2,
-                                      padding: const EdgeInsets.symmetric(
-                                        vertical: 12,
-                                        horizontal: 16,
-                                      ),
-                                      label: Text(skillItems[i]['title'], style: TextStyle(color: CustomColor.whitePrimary, fontWeight: FontWeight.bold),),
-                                      avatar: Image.asset(
-                                        skillItems[i]['img'],
-                                        width: 26,
-                                      ),
-                                    );
-                                  }),
-                                );
-                              },
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
+              // Contacts
+              Container(
+                height: 500,
+                width: double.maxFinite,
+                decoration: BoxDecoration(
+                  color: CustomColor.bgLight1,
+                  borderRadius: BorderRadius.circular(20),
                 ),
+                alignment: Alignment.center,
+                child: const Text('Contacts'),
               ),
 
-              //Projects
+              // Footer
               Container(
                 height: 500,
                 width: double.maxFinite,
-                child: Text('Projects'),
-              ),
-              //Contacts
-              Container(
-                height: 500,
-                width: double.maxFinite,
-                color: Colors.blueGrey,
-                child: Text('Contacts'),
-              ),
-              //Footer
-              Container(
-                height: 500,
-                width: double.maxFinite,
-                color: Colors.redAccent,
-                child: Text('Footer'),
+                color: CustomColor.bgLight2,
+                alignment: Alignment.center,
+                child: const Text('Footer'),
               ),
             ],
           ),

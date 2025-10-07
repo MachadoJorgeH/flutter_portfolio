@@ -8,7 +8,6 @@ class MainDesktop extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
-    final screenWidth = screenSize.width;
     final screenHeight = screenSize.height;
 
 
@@ -41,11 +40,14 @@ class MainDesktop extends StatelessWidget {
                       ),
                     ),
                     Expanded(
-                      child: Image.asset(
-                        'assets/avatar_portfolio_1.png',
-                        // width: screenWidth/2,
-                        fit: BoxFit.contain,
-                        ),
+                      child: Container(
+                        margin: const EdgeInsets.only(bottom: 20.0),
+                        child: Image.asset(
+                          'assets/avatar_portfolio_1.png',
+                          // width: screenWidth/2,
+                          fit: BoxFit.contain,
+                          ),
+                      ),
                     )
                   ],
                 ),
