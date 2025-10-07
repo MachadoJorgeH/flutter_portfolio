@@ -3,7 +3,8 @@ import 'package:gap/gap.dart';
 import 'package:my_portifolio/constants/colors.dart';
 
 class MainMobile extends StatelessWidget {
-  const MainMobile({super.key});
+  const MainMobile({super.key, required this.onGetInTouchTap});
+  final VoidCallback onGetInTouchTap;
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +43,7 @@ class MainMobile extends StatelessWidget {
           SizedBox(
             width: screenWidth * 0.6,
             child: ElevatedButton(
-              onPressed: () {},
+              onPressed: onGetInTouchTap,
               child: Text('Get in touch'),
             ),
           ),

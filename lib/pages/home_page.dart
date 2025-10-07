@@ -142,9 +142,11 @@ class _HomePageState extends State<HomePage> {
               children: [
                 // Main
                 Container(
-                  key: homeSectionKey,
-                  child: isDesktop ? const MainDesktop() : const MainMobile(),
-                ),
+                key: homeSectionKey,
+                child: isDesktop
+                    ? MainDesktop(onGetInTouchTap: () => scrollToSection(4))
+                    : MainMobile(onGetInTouchTap: () => scrollToSection(4)),
+              ),
 
                 // Skills
                 AnimatedSkillsSection(

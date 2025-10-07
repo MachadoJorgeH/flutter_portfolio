@@ -3,12 +3,14 @@ import 'package:gap/gap.dart';
 import 'package:my_portifolio/constants/colors.dart';
 
 class MainDesktop extends StatelessWidget {
-  const MainDesktop({super.key});
+  const MainDesktop({super.key, required this.onGetInTouchTap});
+  final VoidCallback onGetInTouchTap;
 
   @override
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
     final screenHeight = screenSize.height;
+    
 
 
     return Container(
@@ -32,7 +34,7 @@ class MainDesktop extends StatelessWidget {
                           SizedBox(
                             width: 250,
                             child: ElevatedButton(
-                              onPressed: (){},
+                              onPressed: onGetInTouchTap,
                                child: Text('Get in touch')
                                )
                                ),
