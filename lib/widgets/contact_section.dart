@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:my_portifolio/constants/colors.dart';
 import 'package:my_portifolio/widgets/custom_text_field.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ContactSection extends StatelessWidget {
   const ContactSection({super.key});
@@ -79,15 +80,21 @@ class ContactSection extends StatelessWidget {
                       alignment: WrapAlignment.center,
                       children: [
                         InkWell(
-                          onTap: () {},
+                          onTap: () {
+                            launchUrl(Uri.parse('https://github.com/MachadoJorgeH'));
+                          },
                           child: Image.asset('assets/github.png', width: 28),
                         ),
                         InkWell(
-                          onTap: () {},
+                          onTap: () {
+                            launchUrl(Uri.parse('https://www.linkedin.com/in/jorge-henrique-machado/'));
+                          },
                           child: Image.asset('assets/linkedin.png', width: 28),
                         ),
                         InkWell(
-                          onTap: () {},
+                          onTap: () {
+                            launchUrl(Uri.parse('https://www.instagram.com/jorgehenrique_treinador'));
+                          },
                           child: Image.asset('assets/instagram.png', width: 28),
                         ),
                       ],
