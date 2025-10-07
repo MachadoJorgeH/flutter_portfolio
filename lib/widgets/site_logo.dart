@@ -14,13 +14,14 @@ class SiteLogo extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
                   onTap: onTap,
-                  child: Text('JM',
-                  style: TextStyle(
-                    fontSize: 22,
-                    fontWeight: FontWeight.bold,
-                    decoration: TextDecoration.underline,
-                    color: CustomColor.yellowSecondary,
-                  ),),
+                  child: Image.asset('assets/JMLogo-removebg-preview.png'),
+                  // child: Text('JM',
+                  // style: TextStyle(
+                  //   fontSize: 22,
+                  //   fontWeight: FontWeight.bold,
+                  //   decoration: TextDecoration.underline,
+                  //   color: CustomColor.yellowSecondary,
+                  // ),),
                 );
   }
 }
