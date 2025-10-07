@@ -11,6 +11,7 @@ import 'package:my_portifolio/widgets/main_mobile.dart';
 import 'package:my_portifolio/widgets/projects_section.dart';
 import 'package:my_portifolio/widgets/skills_desktop.dart';
 import 'package:my_portifolio/widgets/skills_mobile.dart';
+import 'package:my_portifolio/widgets/skills_section.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -110,7 +111,8 @@ class _HomePageState extends State<HomePage> {
               AnimatedSkillsSection(
                 key: skillsSectionKey,
                 isVisible: showSkillsAnimation,
-                child: isDesktop ? const SkillsDesktop() : const SkillsMobile(),
+                // child: isDesktop ? const SkillsDesktop() : const SkillsMobile(),
+                child: const SkillsSection(),
               ),
 
               // Projects
