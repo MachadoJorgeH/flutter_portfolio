@@ -10,6 +10,7 @@ class ContactSection extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
                 padding: EdgeInsets.fromLTRB(25, 20, 25, 60),
+                width: double.maxFinite,
                 decoration: BoxDecoration(
                   color: CustomColor.bgLight1,
                   // borderRadius: BorderRadius.circular(20),

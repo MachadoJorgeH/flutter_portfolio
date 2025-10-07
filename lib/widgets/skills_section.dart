@@ -27,7 +27,7 @@ class SkillsSection extends StatelessWidget {
           const Gap(40),
           LayoutBuilder(
             builder: (context, constraints) {
-              bool useVerticalLayout = constraints.maxWidth < 768;
+              // bool useVerticalLayout = constraints.maxWidth < 768;
 
               return Wrap(
                 alignment: WrapAlignment.center,

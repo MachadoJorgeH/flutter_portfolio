@@ -9,8 +9,8 @@ import 'package:my_portifolio/widgets/header_mobile.dart';
 import 'package:my_portifolio/widgets/main_desktop.dart';
 import 'package:my_portifolio/widgets/main_mobile.dart';
 import 'package:my_portifolio/widgets/projects_section.dart';
-import 'package:my_portifolio/widgets/skills_desktop.dart';
-import 'package:my_portifolio/widgets/skills_mobile.dart';
+// import 'package:my_portifolio/widgets/skills_desktop.dart';
+// import 'package:my_portifolio/widgets/skills_mobile.dart';
 import 'package:my_portifolio/widgets/skills_section.dart';
 
 class HomePage extends StatefulWidget {
@@ -24,7 +24,10 @@ class _HomePageState extends State<HomePage> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   final scrollController = ScrollController();
+  final homeSectionKey = GlobalKey();
   final skillsSectionKey = GlobalKey();
+  final projectsSectionKey = GlobalKey();
+  final contactSectionKey = GlobalKey();
 
   bool showSkillsAnimation = false;
 
@@ -77,10 +80,40 @@ class _HomePageState extends State<HomePage> {
     super.dispose();
   }
 
+  void scrollToSection(int navIndex) {
+    // Item blog - 3 is ignored for now
+    if (navIndex == 3) return; 
+
+    late GlobalKey key;
+    switch (navIndex) {
+      case 0: // Home
+        key = homeSectionKey;
+        break;
+      case 1: // Skills
+        key = skillsSectionKey;
+        break;
+      case 2: // Projects
+        key = projectsSectionKey;
+        break;
+      case 4: // Contact 
+        key = contactSectionKey;
+        break;
+      default:
+        return;
+    }
+
+    final context = key.currentContext;
+    if (context != null) {
+      Scrollable.ensureVisible(
+        context,
+        duration: const Duration(milliseconds: 500),
+        curve: Curves.easeInOut,
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    // final screenSize = MediaQuery.of(context).size;
-    // final screenWidth = screenSize.width;
     return LayoutBuilder(
       builder: (context, constraints) {
         final isDesktop = constraints.maxWidth >= kMinDesktopWidth;
@@ -88,50 +121,62 @@ class _HomePageState extends State<HomePage> {
         return Scaffold(
           key: scaffoldKey,
           backgroundColor: CustomColor.scaffoldBg,
-          endDrawer: isDesktop ? null : const DrawerMobile(),
-          body: ListView(
+          endDrawer: isDesktop ? null : DrawerMobile(onNavItemTap: scrollToSection),
+          appBar: PreferredSize(
+            preferredSize: Size.fromHeight(isDesktop ? 70 : 60), 
+            child: isDesktop
+                ? HeaderDesktop(onNavMenuTap: scrollToSection)
+                : HeaderMobile(
+                    onLogoTap: () {
+                      scrollToSection(0);
+                    },
+                    onMenuTap: () {
+                      scaffoldKey.currentState?.openEndDrawer();
+                    },
+                  ),
+          ),
+          body: SingleChildScrollView(
             controller: scrollController,
             physics: const BouncingScrollPhysics(),
-            children: [
-              // Header
-              if (isDesktop)
-                HeaderDesktop()
-              else
-                HeaderMobile(
-                  onLogoTap: () {},
-                  onMenuTap: () {
-                    scaffoldKey.currentState?.openEndDrawer();
-                  },
+            child: Column(
+              children: [
+                // Main
+                Container(
+                  key: homeSectionKey,
+                  child: isDesktop ? const MainDesktop() : const MainMobile(),
                 ),
 
-              // Main
-              if (isDesktop) MainDesktop() else MainMobile(),
-
-              // Skills
-              AnimatedSkillsSection(
-                key: skillsSectionKey,
-                isVisible: showSkillsAnimation,
-                // child: isDesktop ? const SkillsDesktop() : const SkillsMobile(),
-                child: const SkillsSection(),
-              ),
-
-              // Projects
-              ProjectsSection(),
-
-              // Contacts
-              ContactSection(),
-
-              // Footer
-              Container(
-                height: 50,
-                width: double.maxFinite,
-                color: CustomColor.bgLight2,
-                alignment: Alignment.center,
-                child: const Text(
-                  'Made by Jorge Machado with Flutter 3.32.8 version',
+                // Skills
+                AnimatedSkillsSection(
+                  key: skillsSectionKey,
+                  isVisible: showSkillsAnimation,
+                  child: const SkillsSection(),
                 ),
-              ),
-            ],
+
+                // Projects
+                Container(
+                    key: projectsSectionKey, 
+                    child: const ProjectsSection()
+                ),
+
+                // Contacts
+                Container(
+                  key: contactSectionKey,
+                  child: const ContactSection(),
+                ),
+
+                // Footer
+                Container(
+                  height: 50,
+                  width: double.maxFinite,
+                  color: CustomColor.bgLight2,
+                  alignment: Alignment.center,
+                  child: const Text(
+                    'Made by Jorge Machado with Flutter 3.32.8 version',
+                  ),
+                ),
+              ],
+            ),
           ),
         );
       },
