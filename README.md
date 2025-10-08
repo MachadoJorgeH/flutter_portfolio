@@ -1,8 +1,7 @@
 # My Flutter Portfolio
 
-![My Portfolio Desktop Screenshot](<img width="1920" height="1080" alt="Image" src="https://github.com/user-attachments/assets/76d6bbbd-1798-4d3e-a832-5c267b16e5c9" />)
-![My Portfolio Mobile Screenshot](<img width="501" height="857" alt="Image" src="https://github.com/user-attachments/assets/64c9aa27-4213-4418-934d-ea4bc23acb86" />
-)
+![My Portfolio Desktop Screenshot](assets/readme_picture_desktop.png)
+![My Portfolio Mobile Screenshot](assets/readme_picture_mobile.png)
 
 
 ## 🚀 About This Project
