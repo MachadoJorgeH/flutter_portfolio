@@ -28,13 +28,16 @@ class _HomePageState extends State<HomePage> {
     GlobalKey(), // 2: Projects
     GlobalKey(), // 3: Contact
   ];
-  
+
   final Map<GlobalKey, bool> _animationStates = {};
+
+  bool _isChecking = false;
+  DateTime _lastCheck = DateTime.now();
 
   @override
   void initState() {
     super.initState();
-    
+
     for (var key in sectionKeys) {
       _animationStates[key] = false;
     }
@@ -47,11 +50,25 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _onScroll() {
+    final now = DateTime.now();
+    if (_isChecking || now.difference(_lastCheck).inMilliseconds < 100) {
+      return;
+    }
+
+    _isChecking = true;
+    _lastCheck = now;
+
     _checkAllPositions();
+
+    _isChecking = false;
   }
 
   void _checkAllPositions() {
-    for (var key in sectionKeys) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isMobile = screenWidth < kMinDesktopWidth;
+
+    for (int i = 0; i < sectionKeys.length; i++) {
+      final key = sectionKeys[i];
       final context = key.currentContext;
       if (context == null) continue;
 
@@ -60,11 +77,30 @@ class _HomePageState extends State<HomePage> {
         if (box == null || !box.hasSize) continue;
 
         final position = box.localToGlobal(Offset.zero);
-        final screenHeight = MediaQuery.of(context).size.height;
+        final screenHeight = MediaQuery.of(this.context).size.height;
+        final sectionHeight = box.size.height;
 
-        final bool isInView =
-            position.dy < screenHeight * 0.8 &&
-            position.dy > -box.size.height / 2;
+        final threshold =
+            i == 2 ? (isMobile ? 0.2 : 0.4) : (isMobile ? 0.1 : 0.15);
+
+        final topVisible = position.dy < 0 ? 0.0 : position.dy;
+        final bottomVisible =
+            (position.dy + sectionHeight) > screenHeight
+                ? screenHeight
+                : (position.dy + sectionHeight);
+
+        final visibleHeight = (bottomVisible - topVisible).clamp(
+          0.0,
+          sectionHeight,
+        );
+
+        final visibilityRatio =
+            sectionHeight > 0 ? visibleHeight / sectionHeight : 0.0;
+
+        final bool isInViewport =
+            position.dy < screenHeight && (position.dy + sectionHeight) > 0;
+        final bool meetsThreshold = visibilityRatio >= threshold;
+        final bool isInView = isInViewport && meetsThreshold;
 
         if (isInView != _animationStates[key]) {
           if (mounted) {
@@ -73,8 +109,23 @@ class _HomePageState extends State<HomePage> {
             });
           }
         }
+
+        // Debug apenas para projects quando solicitado
+        if (i == 2 && false) {
+          // Mude para true para debug
+          debugPrint('Projects (${isMobile ? 'Mobile' : 'Desktop'})');
+          debugPrint('Position.dy: ${position.dy.toStringAsFixed(1)}');
+          debugPrint('Section height: ${sectionHeight.toStringAsFixed(1)}');
+          debugPrint('Screen height: ${screenHeight.toStringAsFixed(1)}');
+          debugPrint('Visible height: ${visibleHeight.toStringAsFixed(1)}');
+          debugPrint(
+            'Visibility: ${(visibilityRatio * 100).toStringAsFixed(1)}%',
+          );
+          debugPrint('Required: ${(threshold * 100).toStringAsFixed(1)}%');
+          debugPrint('InView: $isInView\n');
+        }
       } catch (e) {
-        debugPrint('Erro ao checar posição: $e');
+        debugPrint('Erro ao checar posição da seção $i: $e');
       }
     }
   }
@@ -88,10 +139,6 @@ class _HomePageState extends State<HomePage> {
   void scrollToSection(int navIndex) {
     if (navIndex == 3) return;
 
-    // Home (índice 0) -> sectionKeys[0]
-    // Skills (índice 1) -> sectionKeys[1]
-    // Projects (índice 2) -> sectionKeys[2]
-    // Contact (índice 4) -> sectionKeys[3]
     int keyIndex = navIndex > 2 ? navIndex - 1 : navIndex;
 
     if (keyIndex < 0 || keyIndex >= sectionKeys.length) return;
@@ -103,6 +150,7 @@ class _HomePageState extends State<HomePage> {
         context,
         duration: const Duration(milliseconds: 500),
         curve: Curves.easeInOut,
+        alignment: 0.1,
       );
     }
   }
@@ -116,32 +164,39 @@ class _HomePageState extends State<HomePage> {
         return Scaffold(
           key: scaffoldKey,
           backgroundColor: CustomColor.scaffoldBg,
-          endDrawer: isDesktop ? null : DrawerMobile(onNavItemTap: scrollToSection),
+          endDrawer:
+              isDesktop ? null : DrawerMobile(onNavItemTap: scrollToSection),
           appBar: PreferredSize(
-            preferredSize: Size.fromHeight(isDesktop ? 70 : 60), 
-            child: isDesktop
-                ? HeaderDesktop(onNavMenuTap: scrollToSection)
-                : HeaderMobile(
-                    onLogoTap: () {
-                      scrollToSection(0);
-                    },
-                    onMenuTap: () {
-                      scaffoldKey.currentState?.openEndDrawer();
-                    },
-                  ),
+            preferredSize: Size.fromHeight(isDesktop ? 70 : 60),
+            child:
+                isDesktop
+                    ? HeaderDesktop(onNavMenuTap: scrollToSection)
+                    : HeaderMobile(
+                      onLogoTap: () {
+                        scrollToSection(0);
+                      },
+                      onMenuTap: () {
+                        scaffoldKey.currentState?.openEndDrawer();
+                      },
+                    ),
           ),
           body: SingleChildScrollView(
             controller: scrollController,
             physics: const BouncingScrollPhysics(),
             child: Column(
               children: [
-                // Main
+                // Main (Home)
                 AnimatedSection(
                   key: sectionKeys[0],
                   isVisible: _animationStates[sectionKeys[0]] ?? false,
-                  child: isDesktop
-                      ? MainDesktop(onGetInTouchTap: () => scrollToSection(4))
-                      : MainMobile(onGetInTouchTap: () => scrollToSection(4)),
+                  child:
+                      isDesktop
+                          ? MainDesktop(
+                            onGetInTouchTap: () => scrollToSection(4),
+                          )
+                          : MainMobile(
+                            onGetInTouchTap: () => scrollToSection(4),
+                          ),
                 ),
 
                 // Skills
@@ -155,6 +210,7 @@ class _HomePageState extends State<HomePage> {
                 AnimatedSection(
                   key: sectionKeys[2],
                   isVisible: _animationStates[sectionKeys[2]] ?? false,
+                  duration: const Duration(milliseconds: 500),
                   child: const ProjectsSection(),
                 ),
 

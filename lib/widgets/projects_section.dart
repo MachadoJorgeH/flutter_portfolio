@@ -12,61 +12,61 @@ class ProjectsSection extends StatelessWidget {
     final screenWidth = MediaQuery.of(context).size.width;
     
     return Container(
-                width: screenWidth,
-                padding: const EdgeInsets.fromLTRB(25, 20, 25, 60),
-                child: Column(
-                  children: [
-                    // Work projects title
-                    Text(
-                      'Work Projects',
-                      style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                        color: CustomColor.whitePrimary,
-                      ),
-                    ),
-                    Gap(50),
+      width: screenWidth,
+      padding: const EdgeInsets.fromLTRB(25, 20, 25, 60),
+      child: Column(
+        children: [
+          // Work projects title
+          const Text(
+            'Work Projects',
+            style: TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+              color: CustomColor.whitePrimary,
+            ),
+          ),
+          const Gap(50),
 
-                    // Work projects cards
-                    ConstrainedBox(
-                      constraints: const BoxConstraints(maxWidth: 900),
-                      child: Wrap(
-                        spacing: 25,
-                        runSpacing: 25,
-                        children: [
-                          for (int i = 0; i < workProjectUtils.length; i++)
-                            ProjectCardWidget(project: workProjectUtils[i]),
-                        ],
-                      ),
-                    ),
+          // Work projects cards
+          ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 900),
+            child: Wrap(
+              spacing: 25,
+              runSpacing: 25,
+              children: [
+                for (int i = 0; i < workProjectUtils.length; i++)
+                  ProjectCardWidget(project: workProjectUtils[i]),
+              ],
+            ),
+          ),
 
-                    Gap(50),
+          const Gap(50),
 
-                    // Hobby projects
-                    Text(
-                      'Hobby Projects',
-                      style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                        color: CustomColor.whitePrimary,
-                      ),
-                    ),
-                    Gap(50),
+          // Hobby projects title
+          const Text(
+            'Hobby Projects',
+            style: TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+              color: CustomColor.whitePrimary,
+            ),
+          ),
+          const Gap(50),
 
-                    // Hobby projects cards
-                    ConstrainedBox(
-                      constraints: const BoxConstraints(maxWidth: 900),
-                      child: Wrap(
-                        spacing: 25,
-                        runSpacing: 25,
-                        children: [
-                          for (int i = 0; i < hobbyProjectUtils.length; i++)
-                            ProjectCardWidget(project: hobbyProjectUtils[i]),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              );
+          // Hobby projects cards
+          ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 900),
+            child: Wrap(
+              spacing: 25,
+              runSpacing: 25,
+              children: [
+                for (int i = 0; i < hobbyProjectUtils.length; i++)
+                  ProjectCardWidget(project: hobbyProjectUtils[i]),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
