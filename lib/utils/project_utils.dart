@@ -34,6 +34,7 @@ List<ProjectUtils> hobbyProjectUtils = [
     title: 'Moovzdle',
     subtitle: 'A funny game for employees entertainment',
     githubLink: 'https://github.com/MachadoJorgeH/moovzdle',
+    webLink: 'https://moovzdle.vercel.app/',
   ),
   ProjectUtils(
     image: 'assets/projects/MovieApp.png',

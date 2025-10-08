@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:my_portifolio/constants/colors.dart';
 import 'package:my_portifolio/constants/size.dart';
-import 'package:my_portifolio/widgets/animated_skills_section.dart';
+import 'package:my_portifolio/widgets/animated_sections.dart';
 import 'package:my_portifolio/widgets/contact_section.dart';
 import 'package:my_portifolio/widgets/drawer_mobile.dart';
 import 'package:my_portifolio/widgets/header_desktop.dart';
@@ -9,8 +9,6 @@ import 'package:my_portifolio/widgets/header_mobile.dart';
 import 'package:my_portifolio/widgets/main_desktop.dart';
 import 'package:my_portifolio/widgets/main_mobile.dart';
 import 'package:my_portifolio/widgets/projects_section.dart';
-// import 'package:my_portifolio/widgets/skills_desktop.dart';
-// import 'package:my_portifolio/widgets/skills_mobile.dart';
 import 'package:my_portifolio/widgets/skills_section.dart';
 
 class HomePage extends StatefulWidget {
@@ -22,55 +20,62 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
-
   final scrollController = ScrollController();
-  final homeSectionKey = GlobalKey();
-  final skillsSectionKey = GlobalKey();
-  final projectsSectionKey = GlobalKey();
-  final contactSectionKey = GlobalKey();
 
-  bool showSkillsAnimation = false;
+  final List<GlobalKey> sectionKeys = [
+    GlobalKey(), // 0: Home
+    GlobalKey(), // 1: Skills
+    GlobalKey(), // 2: Projects
+    GlobalKey(), // 3: Contact
+  ];
+  
+  final Map<GlobalKey, bool> _animationStates = {};
 
   @override
   void initState() {
     super.initState();
+    
+    for (var key in sectionKeys) {
+      _animationStates[key] = false;
+    }
+
     scrollController.addListener(_onScroll);
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      Future.delayed(const Duration(milliseconds: 100), () {
-        if (mounted) _checkSkillsPosition();
-      });
+      _checkAllPositions();
     });
   }
 
   void _onScroll() {
-    _checkSkillsPosition();
+    _checkAllPositions();
   }
 
-  void _checkSkillsPosition() {
-    final context = skillsSectionKey.currentContext;
-    if (context == null) return;
+  void _checkAllPositions() {
+    for (var key in sectionKeys) {
+      final context = key.currentContext;
+      if (context == null) continue;
 
-    try {
-      final box = context.findRenderObject() as RenderBox?;
-      if (box == null || !box.hasSize) return;
+      try {
+        final box = context.findRenderObject() as RenderBox?;
+        if (box == null || !box.hasSize) continue;
 
-      final position = box.localToGlobal(Offset.zero);
-      final screenHeight = MediaQuery.of(this.context).size.height;
+        final position = box.localToGlobal(Offset.zero);
+        final screenHeight = MediaQuery.of(context).size.height;
 
-      final bool isInView =
-          position.dy < screenHeight * 0.8 &&
-          position.dy > -box.size.height / 2;
+        final bool isInView =
+            position.dy < screenHeight * 0.8 &&
+            position.dy > -box.size.height / 2;
 
-      if (isInView != showSkillsAnimation) {
-        if (mounted) {
-          setState(() {
-            showSkillsAnimation = isInView;
-          });
+        if (isInView != _animationStates[key]) {
+          if (mounted) {
+            setState(() {
+              _animationStates[key] = isInView;
+            });
+          }
         }
+      } catch (e) {
+        debugPrint('Erro ao checar posição: $e');
       }
-    } catch (e) {
-      debugPrint('Erro ao checar posição: $e');
     }
   }
 
@@ -81,27 +86,17 @@ class _HomePageState extends State<HomePage> {
   }
 
   void scrollToSection(int navIndex) {
-    // Item blog - 3 is ignored for now
-    if (navIndex == 3) return; 
+    if (navIndex == 3) return;
 
-    late GlobalKey key;
-    switch (navIndex) {
-      case 0: // Home
-        key = homeSectionKey;
-        break;
-      case 1: // Skills
-        key = skillsSectionKey;
-        break;
-      case 2: // Projects
-        key = projectsSectionKey;
-        break;
-      case 4: // Contact 
-        key = contactSectionKey;
-        break;
-      default:
-        return;
-    }
+    // Home (índice 0) -> sectionKeys[0]
+    // Skills (índice 1) -> sectionKeys[1]
+    // Projects (índice 2) -> sectionKeys[2]
+    // Contact (índice 4) -> sectionKeys[3]
+    int keyIndex = navIndex > 2 ? navIndex - 1 : navIndex;
 
+    if (keyIndex < 0 || keyIndex >= sectionKeys.length) return;
+
+    final key = sectionKeys[keyIndex];
     final context = key.currentContext;
     if (context != null) {
       Scrollable.ensureVisible(
@@ -141,29 +136,32 @@ class _HomePageState extends State<HomePage> {
             child: Column(
               children: [
                 // Main
-                Container(
-                key: homeSectionKey,
-                child: isDesktop
-                    ? MainDesktop(onGetInTouchTap: () => scrollToSection(4))
-                    : MainMobile(onGetInTouchTap: () => scrollToSection(4)),
-              ),
+                AnimatedSection(
+                  key: sectionKeys[0],
+                  isVisible: _animationStates[sectionKeys[0]] ?? false,
+                  child: isDesktop
+                      ? MainDesktop(onGetInTouchTap: () => scrollToSection(4))
+                      : MainMobile(onGetInTouchTap: () => scrollToSection(4)),
+                ),
 
                 // Skills
-                AnimatedSkillsSection(
-                  key: skillsSectionKey,
-                  isVisible: showSkillsAnimation,
+                AnimatedSection(
+                  key: sectionKeys[1],
+                  isVisible: _animationStates[sectionKeys[1]] ?? false,
                   child: const SkillsSection(),
                 ),
 
                 // Projects
-                Container(
-                    key: projectsSectionKey, 
-                    child: const ProjectsSection()
+                AnimatedSection(
+                  key: sectionKeys[2],
+                  isVisible: _animationStates[sectionKeys[2]] ?? false,
+                  child: const ProjectsSection(),
                 ),
 
                 // Contacts
-                Container(
-                  key: contactSectionKey,
+                AnimatedSection(
+                  key: sectionKeys[3],
+                  isVisible: _animationStates[sectionKeys[3]] ?? false,
                   child: const ContactSection(),
                 ),
 

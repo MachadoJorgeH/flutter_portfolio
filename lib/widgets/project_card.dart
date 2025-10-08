@@ -70,6 +70,7 @@ class ProjectCardWidget extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 10,
                     color: CustomColor.yellowSecondary,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
                 Spacer(),

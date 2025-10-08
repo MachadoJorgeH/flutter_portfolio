@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-class AnimatedSkillsSection extends StatelessWidget {
+class AnimatedSection extends StatelessWidget {
   final Widget child;
   final bool isVisible;
 
-  const AnimatedSkillsSection({
+  const AnimatedSection({
     super.key,
     required this.child,
     required this.isVisible,
