@@ -14,7 +14,7 @@ class SiteLogo extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
                   onTap: onTap,
-                  child: Image.asset('assets/JMLogo-removebg-preview.png'),
+                  child: Image.asset('assets/header_avatar.png'),
                   // child: Text('JM',
                   // style: TextStyle(
                   //   fontSize: 22,
