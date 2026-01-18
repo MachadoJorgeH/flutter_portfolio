@@ -22,13 +22,12 @@ class ProjectUtils {
 // HOBBY PROJECTS
 List<ProjectUtils> hobbyProjectUtils = [
   ProjectUtils(
-    image: 'assets/projects/MindFlow.png',
-    title: 'Mind Flow',
+    image: 'assets/projects/led_informatica_site.png',
+    title: 'Led Informatica Site',
     subtitle:
-        'Habit Tracking and Personal Development App, built with Flutter + Firebase, focusing on productivity, well-being, and routine organization.',
-    githubLink: 'https://github.com/MachadoJorgeH/mindflowproject',
+        'A modern and responsive institutional website developed for LED Informática, focused on commercial automation and technology solutions.',
+    githubLink: 'https://github.com/MachadoJorgeH/site-led-informatica',
   ),
-  // ),
   ProjectUtils(
     image: 'assets/projects/Moovzdle.png',
     title: 'Moovzdle',
@@ -37,12 +36,21 @@ List<ProjectUtils> hobbyProjectUtils = [
     webLink: 'https://moovzdle.vercel.app/',
   ),
   ProjectUtils(
+    image: 'assets/projects/MindFlow.png',
+    title: 'Mind Flow',
+    subtitle:
+        'Habit Tracking and Personal Development App, built with Flutter + Firebase, focusing on productivity, well-being, and routine organization.',
+    githubLink: 'https://github.com/MachadoJorgeH/mindflowproject',
+  ),
+  // ),
+  ProjectUtils(
     image: 'assets/projects/MovieApp.png',
     title: 'Movie App Flutter',
     subtitle:
         'Flutter application that lists popular movies using the TMDb API, with navigation to the details screen.',
     githubLink: 'https://github.com/MachadoJorgeH/movie_app_flutter',
   ),
+  
   ProjectUtils(
     image: 'assets/projects/imcCalculator.png',
     title: 'IMC Calculator',
