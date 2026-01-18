@@ -111,19 +111,19 @@ class _HomePageState extends State<HomePage> {
         }
 
         // Debug apenas para projects quando solicitado
-        if (i == 2 && false) {
-          // Mude para true para debug
-          debugPrint('Projects (${isMobile ? 'Mobile' : 'Desktop'})');
-          debugPrint('Position.dy: ${position.dy.toStringAsFixed(1)}');
-          debugPrint('Section height: ${sectionHeight.toStringAsFixed(1)}');
-          debugPrint('Screen height: ${screenHeight.toStringAsFixed(1)}');
-          debugPrint('Visible height: ${visibleHeight.toStringAsFixed(1)}');
-          debugPrint(
-            'Visibility: ${(visibilityRatio * 100).toStringAsFixed(1)}%',
-          );
-          debugPrint('Required: ${(threshold * 100).toStringAsFixed(1)}%');
-          debugPrint('InView: $isInView\n');
-        }
+        // if (i == 2 && false) {
+        //   // Mude para true para debug
+        //   debugPrint('Projects (${isMobile ? 'Mobile' : 'Desktop'})');
+        //   debugPrint('Position.dy: ${position.dy.toStringAsFixed(1)}');
+        //   debugPrint('Section height: ${sectionHeight.toStringAsFixed(1)}');
+        //   debugPrint('Screen height: ${screenHeight.toStringAsFixed(1)}');
+        //   debugPrint('Visible height: ${visibleHeight.toStringAsFixed(1)}');
+        //   debugPrint(
+        //     'Visibility: ${(visibilityRatio * 100).toStringAsFixed(1)}%',
+        //   );
+        //   debugPrint('Required: ${(threshold * 100).toStringAsFixed(1)}%');
+        //   debugPrint('InView: $isInView\n');
+        // }
       } catch (e) {
         debugPrint('Erro ao checar posição da seção $i: $e');
       }
